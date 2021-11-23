@@ -31,7 +31,10 @@ public class MenuManager
 
   public bool NavigationEnabled { get { return History.Count > 1; } }
 
-  public MenuManager(IServiceProvider serviceProvider, IHostApplicationLifetime hostLifetime, MenuManagerOptions options = null)
+  public MenuManager(
+    IServiceProvider serviceProvider,
+    IHostApplicationLifetime hostLifetime,
+    MenuManagerOptions options = null)
   {
     Pages = new Dictionary<Type, Page>();
     History = new Stack<Page>();
