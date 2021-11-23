@@ -2,6 +2,6 @@
 
 public class MenuManagerOptions
 {
-    public string Title { get; set; }
-    public bool BreadCrumbHeader { get; set; } = false;
+  public string Title { get; set; }
+  public bool BreadCrumbHeader { get; set; } = false;
 }
