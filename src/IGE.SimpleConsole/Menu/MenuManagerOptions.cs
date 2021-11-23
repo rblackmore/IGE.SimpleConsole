@@ -1,4 +1,4 @@
-﻿namespace IGE.EasyConsole.Menu;
+﻿namespace IGE.SimpleConsole.Menu;
 
 public class MenuManagerOptions
 {

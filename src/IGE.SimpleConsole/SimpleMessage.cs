@@ -1,9 +1,9 @@
-﻿namespace IGE.EasyConsole;
+﻿namespace IGE.SimpleConsole;
 using System;
 
 using Spectre.Console;
 
-public static class ConsoleHelpers
+public static class SimpleMessage
 {
   public static void AnyKeyToContinue()
   {

@@ -1,4 +1,4 @@
-﻿namespace IGE.EasyConsole.Menu;
+﻿namespace IGE.SimpleConsole.Menu;
 using System;
 
 public class Option
