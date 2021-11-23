@@ -1,21 +1,19 @@
-﻿using System;
+﻿namespace IGE.EasyConsole.Menu;
+using System;
 
-namespace IGE.EasyConsole.Menu
+public class Option
 {
-    public class Option
+    public string Name { get; private set; }
+    public Action CallBack { get; set; }
+
+    public Option(string name, Action callBack)
     {
-        public string Name { get; private set; }
-        public Action CallBack { get; set; }
+        Name = name;
+        CallBack = callBack;
+    }
 
-        public Option(string name, Action callBack)
-        {
-            Name = name;
-            CallBack = callBack;
-        }
-
-        public override string ToString()
-        {
-            return this.Name;
-        }
+    public override string ToString()
+    {
+        return this.Name;
     }
 }
