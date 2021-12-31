@@ -13,7 +13,7 @@ public class MenuManager
   private readonly IServiceProvider serviceProvider;
   private readonly IHostApplicationLifetime hostLifetime;
 
-  protected string Title { get; set; }
+  protected string WindowTitle { get; set; }
 
   public bool BreadcrumbHeader { get; private set; }
 
@@ -41,7 +41,7 @@ public class MenuManager
 
     if (options != null)
     {
-      Title = options.Title;
+      WindowTitle = options.WindowTitle;
       BreadcrumbHeader = options.BreadCrumbHeader;
     }
 
@@ -53,7 +53,7 @@ public class MenuManager
   {
     try
     {
-      Console.Title = Title;
+      Console.Title = WindowTitle;
 
       do
       {
@@ -94,7 +94,7 @@ public class MenuManager
     if (CurrentPageIsNullOrSameTypeAs(pageType))
       return CurrentPage as T;
 
-    Page nextPage = this.serviceProvider.GetService<T>();
+    Page nextPage = this.serviceProvider.GetService(pageType) as Page;
 
     History.Push(nextPage);
 

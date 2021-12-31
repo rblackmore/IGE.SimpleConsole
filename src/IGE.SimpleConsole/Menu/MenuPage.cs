@@ -1,4 +1,8 @@
-﻿namespace IGE.SimpleConsole.Menu;
+﻿// <copyright file="MenuPage.cs" company="Ryan Blackmore">.
+// Copyright © 2021 Ryan Blackmore. All rights Reserved.
+// </copyright>
+
+namespace IGE.SimpleConsole.Menu;
 using System;
 using System.Collections.Generic;
 
@@ -14,18 +18,18 @@ public abstract class MenuPage : Page
     options = new Stack<Option>();
   }
 
-  public MenuPage Add(string name, Action callback)
+  public MenuPage AddOption(string name, Action callback)
   {
-    return Add(new Option(name, callback));
+    return AddOption(new Option(name, callback));
   }
 
-  public MenuPage Add(Option option)
+  public MenuPage AddOption(Option option)
   {
     this.options.Push(option);
     return this;
   }
 
-  public MenuPage Add(Option[] options)
+  public MenuPage AddOptions(Option[] options)
   {
     foreach (var opt in options)
       this.options.Push(opt);

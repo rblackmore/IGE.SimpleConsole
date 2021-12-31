@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using IGE.SimpleConsole;
+using IGE.SimpleConsole.Menu;
 
 using Microsoft.Extensions.Hosting;
 
@@ -11,9 +12,17 @@ using Spectre.Console;
 
 internal class App : IHostedService
 {
+  private readonly MenuManager menuManager;
+
+  public App(MenuManager menuManager)
+  {
+    this.menuManager = menuManager;
+    this.menuManager.SetPage<MainMenu.MainMenu>();
+  }
+
   public Task StartAsync(CancellationToken cancellationToken)
   {
-    AnsiConsole.MarkupLine("[green]Beginning Program[/]");
+    this.menuManager.Run();
     return Task.CompletedTask;
   }
 

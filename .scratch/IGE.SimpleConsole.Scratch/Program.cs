@@ -1,5 +1,9 @@
 ﻿namespace IGE.SimpleConsole.Scratch;
 
+using System.Reflection;
+
+using IGE.SimpleConsole.DependencyInjection;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -15,5 +19,10 @@ public static class Program
     .ConfigureServices((context, services) =>
     {
       services.AddHostedService<App>();
+      services.AddSimpleMenu(Assembly.GetExecutingAssembly(), opts =>
+      {
+        opts.BreadCrumbHeader = true;
+        opts.WindowTitle = "IGE.SimpleConsole.Scratch Application";
+      });
     });
 }
