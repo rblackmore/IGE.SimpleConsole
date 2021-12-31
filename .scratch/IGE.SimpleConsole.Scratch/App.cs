@@ -10,19 +10,19 @@ using Microsoft.Extensions.Hosting;
 
 using Spectre.Console;
 
-internal class App : IHostedService
+internal class App : ConsoleApp, IHostedService
 {
-  private readonly MenuManager menuManager;
+  private readonly SelectionPrompt<Option> menu = new SelectionPrompt<Option>()
+    .Title($"[springgreen2]Main Menu[/]");
 
-  public App(MenuManager menuManager)
+  public App()
   {
-    this.menuManager = menuManager;
-    this.menuManager.SetPage<MainMenu.MainMenu>();
   }
 
   public Task StartAsync(CancellationToken cancellationToken)
   {
-    this.menuManager.Run();
+    this.Run();
+
     return Task.CompletedTask;
   }
 
@@ -31,5 +31,24 @@ internal class App : IHostedService
     AnsiConsole.MarkupLine("[red]Ending Program[/]");
     SimpleMessage.AnyKeyToContinue();
     return Task.CompletedTask;
+  }
+
+  public override void Initialize()
+  {
+    AnsiConsole.MarkupLine("[red]Initializing[/]");
+    this.menu.AddChoice(new Option("Say Hi", () => AnsiConsole.WriteLine("Hi Grugg!!!")));
+    base.Initialize();
+  }
+
+  public override void Print()
+  {
+    AnsiConsole.MarkupLine("[green]Drawing[/]");
+    base.Print();
+
+    var selection = AnsiConsole.Prompt(menu);
+    selection.CallBack.Invoke();
+
+    AnsiConsole.WriteLine();
+    SimpleMessage.AnyKeyToContinue();
   }
 }

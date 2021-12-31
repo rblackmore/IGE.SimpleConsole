@@ -19,10 +19,6 @@ public static class Program
     .ConfigureServices((context, services) =>
     {
       services.AddHostedService<App>();
-      services.AddSimpleMenu(Assembly.GetExecutingAssembly(), opts =>
-      {
-        opts.BreadCrumbHeader = true;
-        opts.WindowTitle = "IGE.SimpleConsole.Scratch Application";
-      });
+
     });
 }
