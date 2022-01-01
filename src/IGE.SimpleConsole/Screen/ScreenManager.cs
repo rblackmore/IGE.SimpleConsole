@@ -3,32 +3,42 @@
 using System;
 using System.Collections.Generic;
 
-using IGE.SimpleConsole.Interfaces;
-
-public class ScreenManager : IPrintableComponent
+public class ScreenManager
 {
   private readonly IServiceProvider services;
 
-  private readonly Stack<Screen> screenStack = new Stack<Screen>();
+  private readonly Stack<ScreenBase> screenStack = new Stack<ScreenBase>();
+
+  public ScreenManager()
+  {
+  }
 
   public ScreenManager(IServiceProvider services)
   {
     this.services = services;
   }
 
-  public Screen CurrentScreen => this.screenStack.Peek();
+  public ScreenBase CurrentScreen =>
+    this.screenStack.Count > 0 ? this.screenStack.Peek() : null;
 
   public void SetScreen<T>()
-    where T : Screen
+    where T : ScreenBase
   {
     Type screenType = typeof(T);
 
     if (this.IsNullOrTypeOf(screenType))
       return;
 
-    Screen nextScreen = this.services.GetService(screenType) as Screen;
+    ScreenBase nextScreen;
+
+    if (this.services is null)
+      nextScreen = Activator.CreateInstance(screenType) as ScreenBase;
+    else
+      nextScreen = this.services.GetService(screenType) as ScreenBase;
 
     this.screenStack.Push(nextScreen);
+
+    this.CurrentScreen.Initialize();
   }
 
   public void Previous()
@@ -51,6 +61,6 @@ public class ScreenManager : IPrintableComponent
   private bool IsNullOrTypeOf(Type screenType)
   {
     return this.CurrentScreen is not null
-      && this.CurrentScreen.GetType() != screenType;
+      && this.CurrentScreen.GetType() == screenType;
   }
 }

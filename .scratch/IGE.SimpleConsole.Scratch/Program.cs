@@ -18,7 +18,8 @@ public static class Program
     Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
-      services.AddHostedService<App>();
+      services.AddSimpleMenu(Assembly.GetExecutingAssembly());
 
+      services.AddHostedService<App>();
     });
 }

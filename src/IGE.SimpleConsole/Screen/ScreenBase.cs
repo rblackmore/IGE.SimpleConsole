@@ -6,11 +6,11 @@ using IGE.SimpleConsole.Interfaces;
 
 using Spectre.Console;
 
-public abstract class Screen : IComponent
+public abstract class ScreenBase : ISimpleComponent
 {
-  private readonly List<IComponent> components = new ();
+  private readonly List<ISimpleComponent> components = new();
 
-  protected List<IComponent> Components => this.components;
+  protected List<ISimpleComponent> Components => this.components;
 
   public virtual void Initialize()
   {

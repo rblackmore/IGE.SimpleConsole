@@ -4,7 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using IGE.SimpleConsole;
-using IGE.SimpleConsole.Menu;
+using IGE.SimpleConsole.Scratch.Screens;
+using IGE.SimpleConsole.Screen;
 
 using Microsoft.Extensions.Hosting;
 
@@ -12,10 +13,8 @@ using Spectre.Console;
 
 internal class App : ConsoleApp, IHostedService
 {
-  private readonly SelectionPrompt<Option> menu = new SelectionPrompt<Option>()
-    .Title($"[springgreen2]Main Menu[/]");
-
-  public App()
+  public App(ScreenManager screenManager)
+    : base(screenManager)
   {
   }
 
@@ -35,20 +34,13 @@ internal class App : ConsoleApp, IHostedService
 
   public override void Initialize()
   {
-    AnsiConsole.MarkupLine("[red]Initializing[/]");
-    this.menu.AddChoice(new Option("Say Hi", () => AnsiConsole.WriteLine("Hi Grugg!!!")));
+    this.ScreenManager.SetScreen<TitleScreen>();
+
     base.Initialize();
   }
 
   public override void Print()
   {
-    AnsiConsole.MarkupLine("[green]Drawing[/]");
     base.Print();
-
-    var selection = AnsiConsole.Prompt(menu);
-    selection.CallBack.Invoke();
-
-    AnsiConsole.WriteLine();
-    SimpleMessage.AnyKeyToContinue();
   }
 }
