@@ -8,7 +8,7 @@ using Spectre.Console;
 
 public abstract class ScreenBase : ISimpleComponent
 {
-  private readonly List<ISimpleComponent> components = new();
+  private readonly List<ISimpleComponent> components = new ();
 
   protected List<ISimpleComponent> Components => this.components;
 

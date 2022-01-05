@@ -1,10 +1,8 @@
 ﻿namespace IGE.SimpleConsole.DependencyInjection;
 
-using System;
 using System.Linq;
 using System.Reflection;
 
-using IGE.SimpleConsole.Menu;
 using IGE.SimpleConsole.Screen;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -15,18 +13,21 @@ public static class ServiceCollectionExtensions
   /// Registers Menu Manager and Pages with Microsoft Dependency Injection.
   /// </summary>
   /// <param name="services">Services Collection.</param>
-  /// <param name="menuAssembly">Assembly to search for Pages.</param>
+  /// <param name="screenAssembly">Assembly to search for Pages.</param>
+  /// <param name="screenManagerOptionsBuilder">Screen Manager Options Builder.</param>
   /// <returns>Services Collection</returns>
   public static IServiceCollection AddSimpleMenu(
     this IServiceCollection services,
-    Assembly menuAssembly)
+    Assembly screenAssembly,
+    Action<ScreenManagerOptions> screenManagerOptionsBuilder)
   {
-    // var options = new MenuManagerOptions();
-    // optionsBuilder(options);
-    // services.AddSingleton(options);
+    var screenManagerOptions = new ScreenManagerOptions();
+    screenManagerOptionsBuilder(screenManagerOptions);
+    services.AddSingleton(screenManagerOptions);
+
     services.AddSingleton<ScreenManager>();
 
-    var pages = menuAssembly.GetTypes().Where(t => t.IsAssignableTo(typeof(ScreenBase)));
+    var pages = screenAssembly.GetTypes().Where(t => t.IsAssignableTo(typeof(ScreenBase)));
 
     foreach (var page in pages)
     {
