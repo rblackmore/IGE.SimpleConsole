@@ -11,7 +11,7 @@ using Microsoft.Extensions.Hosting;
 
 using Spectre.Console;
 
-internal class App : ConsoleApp, IHostedService
+internal class App : SimpleConsoleApp, IHostedService
 {
   public App(ScreenManager screenManager)
     : base(screenManager)

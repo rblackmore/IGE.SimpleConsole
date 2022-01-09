@@ -9,6 +9,7 @@ public class TitleScreen : ScreenBase
   private readonly ScreenManager screenManager;
 
   public TitleScreen(ScreenManager screenManager)
+    : base("Title Screen")
   {
     this.screenManager = screenManager;
   }

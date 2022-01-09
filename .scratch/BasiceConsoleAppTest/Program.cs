@@ -14,7 +14,7 @@ public static class SingleTons
     screenManager ??= new ScreenManager();
 }
 
-public class App : ConsoleApp
+public class App : SimpleConsoleApp
 {
   public App(ScreenManager screenManager)
     : base(screenManager)

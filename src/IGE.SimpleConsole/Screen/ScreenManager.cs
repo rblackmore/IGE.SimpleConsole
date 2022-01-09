@@ -11,7 +11,7 @@ public class ScreenManager
 
   private readonly ScreenManagerOptions options;
 
-  private readonly Stack<ScreenBase> screenStack = new();
+  private readonly Stack<ScreenBase> screenStack = new ();
 
   public ScreenManager(ScreenManagerOptions options)
   {
@@ -88,5 +88,10 @@ public class ScreenManager
   {
     return this.CurrentScreen is not null
       && this.CurrentScreen.GetType() == screenType;
+  }
+
+  private void SetWindowTitle()
+  {
+    // TODO: Check screen options if breadcrumb title. Then set title accordingly.
   }
 }

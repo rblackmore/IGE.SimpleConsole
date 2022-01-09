@@ -13,6 +13,7 @@ public class MainMenuScreen : ScreenBase
   private readonly ScreenManager screenManager;
 
   public MainMenuScreen(ScreenManager screenManager)
+    : base("Main Menu")
   {
     this.screenManager = screenManager;
   }

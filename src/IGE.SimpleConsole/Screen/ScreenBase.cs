@@ -2,6 +2,8 @@
 
 using System.Collections.Generic;
 
+using Ardalis.GuardClauses;
+
 using IGE.SimpleConsole.Interfaces;
 
 using Spectre.Console;
@@ -9,6 +11,13 @@ using Spectre.Console;
 public abstract class ScreenBase : ISimpleComponent
 {
   private readonly List<ISimpleComponent> components = new ();
+
+  public ScreenBase(string title)
+  {
+    this.ScreenTitle = Guard.Against.NullOrEmpty(title, nameof(title));
+  }
+
+  public string ScreenTitle { get; }
 
   protected List<ISimpleComponent> Components => this.components;
 

@@ -1,26 +1,30 @@
 ﻿namespace IGE.SimpleConsole;
 
+using Ardalis.GuardClauses;
+
 using IGE.SimpleConsole.Interfaces;
 using IGE.SimpleConsole.Screen;
 
 using Spectre.Console;
 
-public abstract class ConsoleApp : ISimpleComponent
+public abstract class SimpleConsoleApp : ISimpleComponent
 {
+  private readonly SimpleConsoleAppOptions options;
   private readonly ScreenManager screenManager;
 
   private bool isExited = false;
 
-  public ConsoleApp(ScreenManager screenManager)
+  public SimpleConsoleApp(ScreenManager screenManager, SimpleConsoleAppOptions options = null!)
   {
-    this.screenManager = screenManager;
+    this.screenManager = Guard.Against.Null(screenManager, nameof(screenManager));
+
+    this.options = options ?? SimpleConsoleAppOptions.Default;
   }
 
   protected ScreenManager ScreenManager => this.screenManager;
 
   public virtual void Initialize()
   {
-
   }
 
   public virtual void Print()
