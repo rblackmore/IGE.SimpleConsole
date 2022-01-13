@@ -3,6 +3,8 @@
 using IGE.SimpleConsole.Menu;
 using IGE.SimpleConsole.Screen;
 
+using Microsoft.Extensions.Hosting;
+
 using Spectre.Console;
 
 public class MainMenuScreen : ScreenBase
@@ -11,30 +13,47 @@ public class MainMenuScreen : ScreenBase
     .Title($"[springgreen2]Main Menu[/]");
 
   private readonly ScreenManager screenManager;
+  private readonly IHostApplicationLifetime applicationLifetime;
 
-  public MainMenuScreen(ScreenManager screenManager)
+  public MainMenuScreen(ScreenManager screenManager, IHostApplicationLifetime applicationLifetime)
     : base("Main Menu")
   {
     this.screenManager = screenManager;
+    this.applicationLifetime = applicationLifetime;
   }
 
-  public override void Initialize()
+  public override async Task InitializeAsync(CancellationToken token)
   {
+    await base.InitializeAsync(token);
+
+    if (token.IsCancellationRequested)
+      return;
+
     this.menu.AddChoice(new Option("Say Hi", () =>
     {
       AnsiConsole.WriteLine("Hi Grugg!!!");
       SimpleMessage.AnyKeyToContinue();
     }));
 
-    this.menu.AddChoice(new Option("Go Back", () => this.screenManager.Previous()));
+    this.menu.AddChoice(new Option("Exit", () =>
+    {
+      this.applicationLifetime.StopApplication();
+    }));
 
-    base.Initialize();
+    this.menu.AddChoice(new Option("Go Back", () => this.screenManager.Previous()));
   }
 
-  public override void Print()
+  public override async Task PrintAsync(CancellationToken token)
   {
-    var selection = AnsiConsole.Prompt(menu);
+    await base.PrintAsync(token);
+    
+    if (token.IsCancellationRequested)
+      return;
+
+    var menuPrompt = menu.ShowAsync(AnsiConsole.Console, token);
+
+    var selection = await menuPrompt;
+
     selection.CallBack.Invoke();
-    base.Print();
   }
 }

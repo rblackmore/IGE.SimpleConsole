@@ -7,7 +7,7 @@ using IGE.SimpleConsole.Screen;
 
 using Spectre.Console;
 
-public abstract class SimpleConsoleApp : ISimpleComponent
+public abstract class SimpleConsoleApp : IAsyncSimpleComponent
 {
   private readonly SimpleConsoleAppOptions options;
   private readonly ScreenManager screenManager;
@@ -23,28 +23,30 @@ public abstract class SimpleConsoleApp : ISimpleComponent
 
   protected ScreenManager ScreenManager => this.screenManager;
 
-  public virtual void Initialize()
+  public virtual async Task InitializeAsync(CancellationToken token)
   {
+    await this.screenManager.InitializeAsync(token);
   }
 
-  public virtual void Print()
+  public virtual async Task PrintAsync(CancellationToken token)
   {
-    this.screenManager.Print();
+    await this.screenManager.PrintAsync(token);
   }
 
-  public void Run()
+  public async Task RunAsync(CancellationToken token)
   {
-    this.Initialize();
+    await this.InitializeAsync(token);
 
     while (!this.isExited)
     {
       AnsiConsole.Clear();
-      this.Print();
+      await this.PrintAsync(token);
     }
   }
 
-  public void Exit()
+  public async Task ExitAsync(CancellationToken token)
   {
     this.isExited = true;
+    await this.screenManager.ExitAsync(token);
   }
 }

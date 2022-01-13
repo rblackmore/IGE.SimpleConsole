@@ -14,14 +14,14 @@ public class TitleScreen : ScreenBase
     this.screenManager = screenManager;
   }
 
-  public override void Print()
+  public override async Task PrintAsync(CancellationToken token)
   {
     AnsiConsole.MarkupLine("[red]Welcome to Test App[/]");
     SimpleMessage.AnyKeyToContinue();
 
-    this.screenManager.SetScreen<MainMenuScreen>();
+    await this.screenManager.SetScreenAsync<MainMenuScreen>(token);
 
-    base.Print();
+    await base.PrintAsync(token);
   }
 
 }

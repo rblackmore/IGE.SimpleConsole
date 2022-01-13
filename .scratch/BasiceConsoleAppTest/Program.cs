@@ -23,7 +23,7 @@ public class App : SimpleConsoleApp
 
   public override void Initialize()
   {
-    this.ScreenManager.SetScreen<TitleScreen>();
+    this.ScreenManager.SetScreenAsync<TitleScreen>();
 
     base.Initialize();
   }
@@ -45,7 +45,7 @@ public class TitleScreen : ScreenBase
   {
     Console.WriteLine("Hello from TitleScreen");
     SimpleMessage.AnyKeyToContinue();
-    SingleTons.ScreenManager.SetScreen<SecondScreen>();
+    SingleTons.ScreenManager.SetScreenAsync<SecondScreen>();
 
     base.Print();
   }

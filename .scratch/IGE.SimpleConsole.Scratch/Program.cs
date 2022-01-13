@@ -11,16 +11,18 @@ using Microsoft.Extensions.Hosting;
 
 public static class Program
 {
-  public static void Main(string[] args)
+  public static async Task Main(string[] args)
   {
-    CreateHostBuilder(args).Build().Run();
+    await CreateHostBuilder(args).Build().RunAsync();
   }
 
   private static IHostBuilder CreateHostBuilder(string[] args) =>
     Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
-      services.AddSimpleConsole((ScreenManagerOptions options) => options.StartupScreenType = typeof(TitleScreen), Assembly.GetExecutingAssembly());
+      services.AddSimpleConsole(
+        (ScreenManagerOptions options) => options.StartupScreenType = typeof(TitleScreen),
+        Assembly.GetExecutingAssembly());
 
       services.AddHostedService<App>();
     });

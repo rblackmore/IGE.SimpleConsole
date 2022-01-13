@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using IGE.SimpleConsole;
-using IGE.SimpleConsole.Scratch.Screens;
 using IGE.SimpleConsole.Screen;
 
 using Microsoft.Extensions.Hosting;
@@ -13,34 +12,63 @@ using Spectre.Console;
 
 internal class App : SimpleConsoleApp, IHostedService
 {
-  public App(ScreenManager screenManager)
+  private readonly IHostApplicationLifetime appLifetime;
+
+  public App(ScreenManager screenManager, IHostApplicationLifetime appLifetime)
     : base(screenManager)
   {
+    this.appLifetime = appLifetime;
   }
 
   public Task StartAsync(CancellationToken cancellationToken)
   {
-    this.Run();
+    var tokenSource = new CancellationTokenSource();
+
+    this.appLifetime.ApplicationStarted.Register(() =>
+    {
+      Task.Run(async () =>
+      {
+        try
+        {
+          await this.RunAsync(tokenSource.Token);
+        }
+        catch (Exception ex)
+        {
+          // Handle Exception;
+        }
+        finally
+        {
+          this.appLifetime.StopApplication();
+        }
+      });
+    });
+
+    this.appLifetime.ApplicationStopping.Register(() =>
+    {
+      Task.Run(() =>
+      {
+        tokenSource.Cancel();
+      });
+    });
 
     return Task.CompletedTask;
   }
 
   public Task StopAsync(CancellationToken cancellationToken)
   {
+    AnsiConsole.Clear();
     AnsiConsole.MarkupLine("[red]Ending Program[/]");
     SimpleMessage.AnyKeyToContinue();
     return Task.CompletedTask;
   }
 
-  public override void Initialize()
+  public override async Task InitializeAsync(CancellationToken token)
   {
-    this.ScreenManager.SetScreen<TitleScreen>();
-
-    base.Initialize();
+    await base.InitializeAsync(token);
   }
 
-  public override void Print()
+  public override async Task PrintAsync(CancellationToken token)
   {
-    base.Print();
+    await base.PrintAsync(token);
   }
 }

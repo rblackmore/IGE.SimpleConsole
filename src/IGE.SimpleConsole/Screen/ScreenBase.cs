@@ -8,9 +8,9 @@ using IGE.SimpleConsole.Interfaces;
 
 using Spectre.Console;
 
-public abstract class ScreenBase : ISimpleComponent
+public abstract class ScreenBase : IAsyncSimpleComponent
 {
-  private readonly List<ISimpleComponent> components = new ();
+  private readonly List<IAsyncSimpleComponent> components = new();
 
   public ScreenBase(string title)
   {
@@ -19,21 +19,32 @@ public abstract class ScreenBase : ISimpleComponent
 
   public string ScreenTitle { get; }
 
-  protected List<ISimpleComponent> Components => this.components;
+  protected List<IAsyncSimpleComponent> Components => this.components;
 
-  public virtual void Initialize()
+  public virtual async Task InitializeAsync(CancellationToken token)
   {
-    foreach (var component in this.components)
+    if (token.IsCancellationRequested)
+      return;
+
+    foreach (var component in this.Components)
     {
-      component.Initialize();
+      await component.InitializeAsync(token);
     }
   }
 
-  public virtual void Print()
+  public virtual async Task PrintAsync(CancellationToken token)
   {
-    foreach (var component in this.components)
+    if (token.IsCancellationRequested)
+      return;
+
+    foreach (var component in this.Components)
     {
-      component.Print();
+      await component.PrintAsync(token);
     }
+  }
+
+  public virtual void Exit()
+  {
+    this.components.Clear();
   }
 }

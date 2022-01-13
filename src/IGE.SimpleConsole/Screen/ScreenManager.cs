@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Generic;
 
+using Ardalis.GuardClauses;
+
 using IGE.SimpleConsole.Exceptions;
 
 public class ScreenManager
@@ -15,31 +17,32 @@ public class ScreenManager
 
   public ScreenManager(ScreenManagerOptions options)
   {
-    if (options is null)
-      throw new ArgumentNullException(nameof(options));
-
-    this.options = options;
-
-    if (options.StartupScreenType is not null)
-      this.SetScreen(options.StartupScreenType);
+    this.options = Guard.Against.Null(options, nameof(options));
   }
 
   public ScreenManager(IServiceProvider services, ScreenManagerOptions options)
+    : this(options)
   {
-    if (options is null)
-      throw new ArgumentNullException(nameof(options));
-
     this.services = services;
-    this.options = options;
-
-    if (options.StartupScreenType is not null)
-      this.SetScreen(options.StartupScreenType);
   }
 
-  public ScreenBase CurrentScreen =>
-    this.screenStack.Count > 0 ? this.screenStack.Peek() : null!;
+  private ScreenBase CurrentScreen =>
+    (this.screenStack.Count > 0) ? this.screenStack.Peek() : null!;
 
-  public void SetScreen(Type screenType)
+  public async Task InitializeAsync(CancellationToken token)
+  {
+    if (this.options.StartupScreenType is not null)
+      await this.SetScreenAsync(this.options.StartupScreenType, token);
+  }
+
+  public Task ExitAsync(CancellationToken token)
+  {
+    this.screenStack.Clear();
+
+    return Task.CompletedTask;
+  }
+
+  public async Task SetScreenAsync(Type screenType, CancellationToken token)
   {
     if (this.IsNullOrTypeOf(screenType))
       return;
@@ -56,15 +59,15 @@ public class ScreenManager
 
     this.screenStack.Push(nextScreen);
 
-    this.CurrentScreen.Initialize();
+    await this.CurrentScreen.InitializeAsync(token);
   }
 
-  public void SetScreen<T>()
+  public async Task SetScreenAsync<T>(CancellationToken token)
     where T : ScreenBase
   {
     Type screenType = typeof(T);
 
-    this.SetScreen(screenType);
+    await this.SetScreenAsync(screenType, token);
   }
 
   public void Previous()
@@ -79,9 +82,9 @@ public class ScreenManager
       this.screenStack.Pop();
   }
 
-  public void Print()
+  public async Task PrintAsync(CancellationToken token)
   {
-    this.CurrentScreen.Print();
+    await this.CurrentScreen.PrintAsync(token);
   }
 
   private bool IsNullOrTypeOf(Type screenType)
