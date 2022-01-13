@@ -40,7 +40,7 @@ public class MainMenuScreen : ScreenBase
       this.applicationLifetime.StopApplication();
     }));
 
-    this.menu.AddChoice(new Option("Go Back", () => this.screenManager.Previous()));
+    this.menu.AddChoice(new Option("Go Back", async () => await this.screenManager.Previous(token)));
   }
 
   public override async Task PrintAsync(CancellationToken token)

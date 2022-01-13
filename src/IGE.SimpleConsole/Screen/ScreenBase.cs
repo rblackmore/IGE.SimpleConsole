@@ -10,7 +10,7 @@ using Spectre.Console;
 
 public abstract class ScreenBase : IAsyncSimpleComponent
 {
-  private readonly List<IAsyncSimpleComponent> components = new();
+  private readonly List<IAsyncSimpleComponent> components = new ();
 
   public ScreenBase(string title)
   {

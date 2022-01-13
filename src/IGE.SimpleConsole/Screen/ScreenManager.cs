@@ -13,7 +13,9 @@ public class ScreenManager
 
   private readonly ScreenManagerOptions options;
 
-  private readonly Stack<ScreenBase> screenStack = new ();
+  private readonly Stack<Type> screenHistory = new ();
+
+  private ScreenBase? currentScreen;
 
   public ScreenManager(ScreenManagerOptions options)
   {
@@ -27,7 +29,10 @@ public class ScreenManager
   }
 
   private ScreenBase CurrentScreen =>
-    (this.screenStack.Count > 0) ? this.screenStack.Peek() : null!;
+    this.currentScreen!;
+
+  private Type Current =>
+    this.screenHistory.Count > 0 ? this.screenHistory.Peek() : null!;
 
   public async Task InitializeAsync(CancellationToken token)
   {
@@ -37,7 +42,7 @@ public class ScreenManager
 
   public Task ExitAsync(CancellationToken token)
   {
-    this.screenStack.Clear();
+    this.screenHistory.Clear();
 
     return Task.CompletedTask;
   }
@@ -47,17 +52,19 @@ public class ScreenManager
     if (this.IsNullOrTypeOf(screenType))
       return;
 
-    ScreenBase? nextScreen;
+    ScreenBase? newScreenInstance;
 
     if (this.services is null)
-      nextScreen = Activator.CreateInstance(screenType) as ScreenBase;
+      newScreenInstance = Activator.CreateInstance(screenType) as ScreenBase;
     else
-      nextScreen = this.services.GetService(screenType) as ScreenBase;
+      newScreenInstance = this.services.GetService(screenType) as ScreenBase;
 
-    if (nextScreen == null)
+    if (newScreenInstance == null)
       throw new InvalidScreenTypeException(screenType, screenType.Name);
 
-    this.screenStack.Push(nextScreen);
+    this.screenHistory.Push(screenType);
+
+    this.currentScreen = newScreenInstance;
 
     await this.CurrentScreen.InitializeAsync(token);
   }
@@ -70,16 +77,20 @@ public class ScreenManager
     await this.SetScreenAsync(screenType, token);
   }
 
-  public void Previous()
+  public async Task Previous(CancellationToken token)
   {
-    if (this.screenStack.Count > 1)
-      this.screenStack.Pop();
+    if (this.screenHistory.Count > 1)
+      this.screenHistory.Pop();
+
+    await this.SetScreenAsync(this.screenHistory.Peek(), token);
   }
 
-  public void NavigateHome()
+  public Task NavigateHome(CancellationToken token)
   {
-    while (this.screenStack.Count > 1)
-      this.screenStack.Pop();
+    while (this.screenHistory.Count > 1)
+      this.screenHistory.Pop();
+
+    return Task.CompletedTask;
   }
 
   public async Task PrintAsync(CancellationToken token)
