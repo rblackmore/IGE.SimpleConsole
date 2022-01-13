@@ -1,6 +1,5 @@
 ﻿namespace IGE.SimpleConsole.Scratch.Screens;
 
-using IGE.SimpleConsole.Menu;
 using IGE.SimpleConsole.Screen;
 
 using Microsoft.Extensions.Hosting;
