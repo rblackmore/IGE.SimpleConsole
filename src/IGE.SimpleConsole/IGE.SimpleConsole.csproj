@@ -13,11 +13,22 @@
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
 
+  <!--<PropertyGroup>
+    <Version>2.0.1-alpha</Version>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.1</FileVersion>
+    <InformationalVersion>2.0.0</InformationalVersion>
+  </PropertyGroup>-->
+
   <PropertyGroup>
-    <Version>1.1.1</Version>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.1.1.0</FileVersion>
-    <InformationalVersion>1.1.1</InformationalVersion>
+    <VersionPrefix>2.0.1</VersionPrefix>
+    <VersionSuffix>-$([System.DateTime]::UtcNow.ToString(yyyyMMddhhmm))</VersionSuffix>
+    <Version Condition=" '$(VersionSuffix)' == '' ">$(VersionPrefix)</Version>
+    <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)$(VersionSuffix)</Version>
+    <InformationalVersion Condition=" '$(VersionSuffix)' == '' ">$(VersionPrefix)</InformationalVersion>
+    <InformationalVersion Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)$(VersionSuffix)</InformationalVersion>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <FileVersion>$(VersionPrefix).0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
