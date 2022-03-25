@@ -11,6 +11,7 @@
     <Description>.NET Helpful Console Tools.</Description>
     <SignAssembly>False</SignAssembly>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+    <Configurations>Debug;Release;DebugPublishLocal</Configurations>
   </PropertyGroup>
 
   <!--<PropertyGroup>
@@ -23,6 +24,7 @@
   <PropertyGroup>
     <VersionPrefix>3.0.0</VersionPrefix>
     <VersionSuffix Condition="'$(Configuration)' == 'DEBUG'">-$([System.DateTime]::UtcNow.ToString(yyyyMMddhhmm))</VersionSuffix>
+    <VersionSuffix Condition="'$(Configuration)'=='DebugPublishLocal'">-$([System.DateTime]::UtcNow.ToString(yyyyMMddhhmm))</VersionSuffix>
     <VersionSuffix Condition="'$(Configuration)' == 'RELEASE'"></VersionSuffix>
     <Version Condition=" '$(VersionSuffix)' == '' ">$(VersionPrefix)</Version>
     <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)$(VersionSuffix)</Version>

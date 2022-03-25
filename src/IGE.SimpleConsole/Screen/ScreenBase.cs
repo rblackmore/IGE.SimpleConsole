@@ -2,28 +2,26 @@
 
 using System.Collections.Generic;
 
-using Ardalis.GuardClauses;
-
+using IGE.SimpleConsole.Components;
 using IGE.SimpleConsole.Interfaces;
 
 using Spectre.Console;
 
-public abstract class ScreenBase : IAsyncSimpleComponent
+public abstract class ScreenBase : ISimpleComponentAsync
 {
-  private readonly List<IAsyncSimpleComponent> components = new ();
+  private readonly List<ISimpleComponentAsync> components = new ();
   private readonly SimpleConsoleApp app;
 
-  public ScreenBase(string title, SimpleConsoleApp app)
+  public ScreenBase(SimpleConsoleApp app)
   {
-    this.ScreenTitle = Guard.Against.NullOrEmpty(title, nameof(title));
     this.app = app;
   }
 
-  public string ScreenTitle { get; }
+  public ScreenTitle ScreenTitle { get; set; } = new (string.Empty);
 
   protected SimpleConsoleApp App => this.app;
 
-  protected List<IAsyncSimpleComponent> Components => this.components;
+  protected List<ISimpleComponentAsync> Components => this.components;
 
   public virtual async Task InitializeAsync(CancellationToken token = default)
   {
@@ -40,6 +38,8 @@ public abstract class ScreenBase : IAsyncSimpleComponent
   {
     if (token.IsCancellationRequested)
       return;
+
+    await this.ScreenTitle.PrintAsync(token);
 
     foreach (var component in this.Components)
     {

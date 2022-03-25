@@ -1,6 +1,6 @@
 ﻿namespace IGE.SimpleConsole.Interfaces;
 
-public interface IAsyncSimpleComponent
+public interface ISimpleComponentAsync
 {
   Task InitializeAsync(CancellationToken token);
 

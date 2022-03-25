@@ -1,8 +1,7 @@
 ﻿namespace IGE.SimpleConsole.Scratch.Screens;
 
+using IGE.SimpleConsole.Components;
 using IGE.SimpleConsole.Screen;
-
-using Microsoft.Extensions.Hosting;
 
 using Spectre.Console;
 
@@ -14,8 +13,9 @@ public class MainMenuScreen : ScreenBase
   private readonly ScreenManager screenManager;
 
   public MainMenuScreen(ScreenManager screenManager, SimpleConsoleApp app)
-    : base("Main Menu", app)
+    : base(app)
   {
+    this.ScreenTitle = new ScreenTitle("Main Menu");
     this.screenManager = screenManager;
   }
 

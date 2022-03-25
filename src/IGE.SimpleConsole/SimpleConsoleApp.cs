@@ -10,7 +10,7 @@ using Microsoft.Extensions.Hosting;
 
 using Spectre.Console;
 
-public class SimpleConsoleApp : IAsyncSimpleComponent
+public class SimpleConsoleApp : ISimpleComponentAsync
 {
   private readonly IHostApplicationLifetime applicationLifetime;
   private readonly SimpleConsoleAppOptions options;
@@ -26,8 +26,6 @@ public class SimpleConsoleApp : IAsyncSimpleComponent
     this.options = options ?? SimpleConsoleAppOptions.Default;
     this.applicationLifetime = applicationLifetime;
   }
-
-
 
   protected ScreenManager ScreenManager => this.screenManager;
 
@@ -58,7 +56,7 @@ public class SimpleConsoleApp : IAsyncSimpleComponent
     return Task.CompletedTask;
   }
 
-  public static async Task RunAsync(IHost host)
+  public static Task RunAsync(IHost host)
   {
     var lifeTime = host.Services.GetRequiredService<IHostApplicationLifetime>();
 
@@ -86,6 +84,6 @@ public class SimpleConsoleApp : IAsyncSimpleComponent
         src.Cancel();
     });
 
-    //await host.WaitForShutdownAsync();
+    return Task.CompletedTask;
   }
 }
