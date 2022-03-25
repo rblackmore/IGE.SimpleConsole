@@ -5,23 +5,26 @@ using Ardalis.GuardClauses;
 using IGE.SimpleConsole.Interfaces;
 using IGE.SimpleConsole.Screen;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using Spectre.Console;
 
-public class SimpleConsoleApp : IAsyncSimpleComponent, IHostedService
+public class SimpleConsoleApp : IAsyncSimpleComponent
 {
+  private readonly IHostApplicationLifetime applicationLifetime;
   private readonly SimpleConsoleAppOptions options;
   private readonly ScreenManager screenManager;
-  private bool isExited = false;
 
   public SimpleConsoleApp(
     ScreenManager screenManager,
+    IHostApplicationLifetime applicationLifetime,
     SimpleConsoleAppOptions options = null!)
   {
     this.screenManager = Guard.Against.Null(screenManager, nameof(screenManager));
 
     this.options = options ?? SimpleConsoleAppOptions.Default;
+    this.applicationLifetime = applicationLifetime;
   }
 
   protected ScreenManager ScreenManager => this.screenManager;
@@ -36,7 +39,7 @@ public class SimpleConsoleApp : IAsyncSimpleComponent, IHostedService
     await this.screenManager.PrintAsync(token);
   }
 
-  public async Task RunAsync(CancellationToken token = default)
+  public async Task StartAsync(CancellationToken token = default)
   {
     await this.InitializeAsync(token);
 
@@ -47,19 +50,42 @@ public class SimpleConsoleApp : IAsyncSimpleComponent, IHostedService
     }
   }
 
-  public async Task ExitAsync(CancellationToken token)
+  public Task ExitAsync(CancellationToken token = default)
   {
-    this.isExited = true;
-    await this.screenManager.ExitAsync(token);
+    this.applicationLifetime.StopApplication();
+    return Task.CompletedTask;
   }
 
-  public async Task StartAsync(CancellationToken cancellationToken)
+  public static async Task RunAsync(IHost host)
   {
-    await this.RunAsync(cancellationToken);
-  }
+    var lifeTime = host.Services.GetRequiredService<IHostApplicationLifetime>();
 
-  public async Task StopAsync(CancellationToken cancellationToken)
-  {
-    await this.ExitAsync(cancellationToken);
+    var src = new CancellationTokenSource();
+
+    lifeTime.ApplicationStarted.Register(async () =>
+    {
+      try
+      {
+        var app = host.Services.GetRequiredService<SimpleConsoleApp>();
+        await app.StartAsync(src.Token);
+      }
+      catch (Exception ex)
+      {
+        //TODO: Handle Exceptions;
+      }
+      finally
+      {
+        lifeTime.StopApplication();
+      }
+    });
+
+    lifeTime.ApplicationStopping.Register(() =>
+    {
+        src.Cancel();
+    });
+
+    await host.StartAsync();
+
+    await host.WaitForShutdownAsync();
   }
 }

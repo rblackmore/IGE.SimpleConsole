@@ -22,7 +22,9 @@ public class ScreenManager
     this.options = Guard.Against.Null(options, nameof(options));
   }
 
-  public ScreenManager(IServiceProvider services, SimpleConsoleAppOptions options)
+  public ScreenManager(
+    IServiceProvider services,
+    SimpleConsoleAppOptions options)
     : this(options)
   {
     this.services = services;

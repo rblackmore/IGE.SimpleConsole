@@ -1,14 +1,15 @@
-﻿namespace IGE.SimpleConsole;
+﻿namespace IGE.SimpleConsole.Setup;
 
 using System;
 using System.Reflection;
 
+using IGE.SimpleConsole;
 using IGE.SimpleConsole.Screen;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-public static class SimpleConsoleAppBuilder
+public static class SimpleConsoleAppHostBuilderExtensions
 {
   public static IHostBuilder UseSimpleConsoleApp(this IHostBuilder hostBuilder, Type assemblyMarker, Action<SimpleConsoleAppOptions> options)
   {
@@ -24,7 +25,7 @@ public static class SimpleConsoleAppBuilder
     options.Invoke(opt);
     hostBuilder.ConfigureServices((hostContext, services) =>
     {
-      services.AddHostedService<SimpleConsoleApp>();
+      services.AddSingleton<SimpleConsoleApp>();
       services.AddSingleton<ScreenManager>();
       services.AddSingleton(opt);
       services.AddScreensFromAssembly(assembly);

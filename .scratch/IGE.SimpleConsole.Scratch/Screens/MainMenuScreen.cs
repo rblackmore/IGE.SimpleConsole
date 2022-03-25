@@ -12,13 +12,11 @@ public class MainMenuScreen : ScreenBase
     .Title($"[springgreen2]Main Menu[/]");
 
   private readonly ScreenManager screenManager;
-  private readonly IHostApplicationLifetime applicationLifetime;
 
-  public MainMenuScreen(ScreenManager screenManager, IHostApplicationLifetime applicationLifetime)
-    : base("Main Menu")
+  public MainMenuScreen(ScreenManager screenManager, SimpleConsoleApp app)
+    : base("Main Menu", app)
   {
     this.screenManager = screenManager;
-    this.applicationLifetime = applicationLifetime;
   }
 
   public override async Task InitializeAsync(CancellationToken token)
@@ -34,9 +32,9 @@ public class MainMenuScreen : ScreenBase
       SimpleMessage.AnyKeyToContinue();
     }));
 
-    this.menu.AddChoice(new Option("Exit", () =>
+    this.menu.AddChoice(new Option("Exit", async () =>
     {
-      this.applicationLifetime.StopApplication();
+      await this.ExitAsync(token);
     }));
 
     this.menu.AddChoice(new Option("Go Back", async () => await this.screenManager.Previous(token)));
