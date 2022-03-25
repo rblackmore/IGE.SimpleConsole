@@ -23,5 +23,4 @@ public class TitleScreen : ScreenBase
 
     await base.PrintAsync(token);
   }
-
 }

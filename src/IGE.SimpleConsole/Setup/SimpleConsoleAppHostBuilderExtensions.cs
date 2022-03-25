@@ -11,18 +11,25 @@ using Microsoft.Extensions.Hosting;
 
 public static class SimpleConsoleAppHostBuilderExtensions
 {
-  public static IHostBuilder UseSimpleConsoleApp(this IHostBuilder hostBuilder, Type assemblyMarker, Action<SimpleConsoleAppOptions> options)
+  public static IHostBuilder UseSimpleConsoleApp(
+    this IHostBuilder hostBuilder,
+    Type assemblyMarker,
+    Action<SimpleConsoleAppOptions> options)
   {
     var screenAssembly = assemblyMarker.Assembly;
 
     return hostBuilder.UseSimpleConsoleApp(screenAssembly, options);
   }
 
-  public static IHostBuilder UseSimpleConsoleApp(this IHostBuilder hostBuilder, Assembly assembly, Action<SimpleConsoleAppOptions> options)
+  public static IHostBuilder UseSimpleConsoleApp(
+    this IHostBuilder hostBuilder,
+    Assembly assembly,
+    Action<SimpleConsoleAppOptions> options)
   {
     var opt = new SimpleConsoleAppOptions();
 
     options.Invoke(opt);
+
     hostBuilder.ConfigureServices((hostContext, services) =>
     {
       services.AddSingleton<SimpleConsoleApp>();
@@ -38,8 +45,9 @@ public static class SimpleConsoleAppHostBuilderExtensions
     this IServiceCollection services,
     Assembly screenAssembly)
   {
-    var screens =
-      screenAssembly.GetTypes().Where(t => t.IsAssignableTo(typeof(ScreenBase)));
+    var screens = screenAssembly
+        .GetTypes()
+        .Where(t => t.IsAssignableTo(typeof(ScreenBase)));
 
     foreach (var screen in screens)
     {

@@ -10,6 +10,6 @@ IHost CreateHost(string[] args) =>
   Host.CreateDefaultBuilder(args)
   .UseSimpleConsoleApp(typeof(TitleScreen), options =>
   {
-    options.StartupScreenType = typeof(TitleScreen);
+    options.SetStartScreen(typeof(FirstScreen));
   })
   .Build();
