@@ -27,6 +27,8 @@ public class SimpleConsoleApp : IAsyncSimpleComponent
     this.applicationLifetime = applicationLifetime;
   }
 
+
+
   protected ScreenManager ScreenManager => this.screenManager;
 
   public virtual async Task InitializeAsync(CancellationToken token = default)
@@ -84,8 +86,6 @@ public class SimpleConsoleApp : IAsyncSimpleComponent
         src.Cancel();
     });
 
-    await host.StartAsync();
-
-    await host.WaitForShutdownAsync();
+    //await host.WaitForShutdownAsync();
   }
 }

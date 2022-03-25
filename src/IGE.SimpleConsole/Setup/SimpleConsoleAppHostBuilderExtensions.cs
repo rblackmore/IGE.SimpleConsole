@@ -8,6 +8,7 @@ using IGE.SimpleConsole.Screen;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 public static class SimpleConsoleAppHostBuilderExtensions
 {
@@ -30,8 +31,14 @@ public static class SimpleConsoleAppHostBuilderExtensions
 
     options.Invoke(opt);
 
+    hostBuilder.ConfigureLogging(logging =>
+    {
+      logging.ClearProviders();
+    });
+
     hostBuilder.ConfigureServices((hostContext, services) =>
     {
+      services.AddHostedService<SimpleHostApp>();
       services.AddSingleton<SimpleConsoleApp>();
       services.AddSingleton<ScreenManager>();
       services.AddSingleton(opt);

@@ -4,12 +4,13 @@ using IGE.SimpleConsole.Setup;
 
 using Microsoft.Extensions.Hosting;
 
-await SimpleConsoleApp.RunAsync(CreateHost(args));
+await CreateHostBuilder(args).Build().RunAsync();
 
-IHost CreateHost(string[] args) =>
+//await SimpleConsoleApp.RunAsync(CreateHost(args));
+
+IHostBuilder CreateHostBuilder(string[] args) =>
   Host.CreateDefaultBuilder(args)
   .UseSimpleConsoleApp(typeof(TitleScreen), options =>
   {
-    options.SetStartScreen(typeof(FirstScreen));
-  })
-  .Build();
+    options.SetStartScreen(typeof(TitleScreen));
+  });
