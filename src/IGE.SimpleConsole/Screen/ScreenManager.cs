@@ -11,18 +11,18 @@ public class ScreenManager
 {
   private readonly IServiceProvider? services;
 
-  private readonly ScreenManagerOptions options;
+  private readonly SimpleConsoleAppOptions options;
 
   private readonly Stack<Type> screenHistory = new ();
 
   private ScreenBase? currentScreen;
 
-  public ScreenManager(ScreenManagerOptions options)
+  public ScreenManager(SimpleConsoleAppOptions options)
   {
     this.options = Guard.Against.Null(options, nameof(options));
   }
 
-  public ScreenManager(IServiceProvider services, ScreenManagerOptions options)
+  public ScreenManager(IServiceProvider services, SimpleConsoleAppOptions options)
     : this(options)
   {
     this.services = services;

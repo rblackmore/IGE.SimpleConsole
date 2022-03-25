@@ -2,7 +2,16 @@
 
 public class SimpleConsoleAppOptions
 {
-  public string? Title { get; set; }
+  public static SimpleConsoleAppOptions Default { get; internal set; }
+  public string[]? Args { get; init; }
 
-  public static SimpleConsoleAppOptions Default => new () { Title = null };
+  public string? EnvironmentName { get; init; }
+
+  public string? ApplicationName { get; init; }
+
+  public string? ContentRootPath { get; init; }
+
+  public Type? StartupScreenType { get; set; }
+
+  public bool ShowBreadCrumb { get; set; }
 }

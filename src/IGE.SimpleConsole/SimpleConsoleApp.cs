@@ -5,13 +5,14 @@ using Ardalis.GuardClauses;
 using IGE.SimpleConsole.Interfaces;
 using IGE.SimpleConsole.Screen;
 
+using Microsoft.Extensions.Hosting;
+
 using Spectre.Console;
 
-public abstract class SimpleConsoleApp : IAsyncSimpleComponent
+public class SimpleConsoleApp : IAsyncSimpleComponent, IHostedService
 {
   private readonly SimpleConsoleAppOptions options;
   private readonly ScreenManager screenManager;
-
   private bool isExited = false;
 
   public SimpleConsoleApp(
@@ -50,5 +51,15 @@ public abstract class SimpleConsoleApp : IAsyncSimpleComponent
   {
     this.isExited = true;
     await this.screenManager.ExitAsync(token);
+  }
+
+  public async Task StartAsync(CancellationToken cancellationToken)
+  {
+    await this.RunAsync(cancellationToken);
+  }
+
+  public async Task StopAsync(CancellationToken cancellationToken)
+  {
+    await this.ExitAsync(cancellationToken);
   }
 }
