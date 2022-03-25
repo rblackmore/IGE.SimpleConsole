@@ -12,5 +12,6 @@ IHostBuilder CreateHostBuilder(string[] args) =>
   Host.CreateDefaultBuilder(args)
   .UseSimpleConsoleApp(typeof(TitleScreen), options =>
   {
+    options.Args = args;
     options.SetStartScreen(typeof(TitleScreen));
   });

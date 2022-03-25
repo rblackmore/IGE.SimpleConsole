@@ -4,7 +4,7 @@ public class SimpleConsoleAppOptions
 {
   public static SimpleConsoleAppOptions Default => new ();
 
-  public string[]? Args { get; init; }
+  public string[]? Args { get; set; }
 
   public Type? StartupScreenType { get; set; }
 
