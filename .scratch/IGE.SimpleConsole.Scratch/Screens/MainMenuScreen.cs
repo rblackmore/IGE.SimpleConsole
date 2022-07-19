@@ -8,7 +8,7 @@ using Spectre.Console;
 public class MainMenuScreen : ScreenBase
 {
   private readonly SelectionPrompt<Option> menu = new SelectionPrompt<Option>()
-    .Title($"[springgreen2]Main Menu[/]");
+    .Title($"[springgreen2]Main Prompt[/]");
 
   private readonly ScreenManager screenManager;
 
@@ -25,6 +25,8 @@ public class MainMenuScreen : ScreenBase
 
     if (token.IsCancellationRequested)
       return;
+
+    this.menu.AddChoice(new Option("ToDos", async () => await this.screenManager.SetScreenAsync<TodoListScreen>(token)));
 
     this.menu.AddChoice(new Option("Say Hi", () =>
     {
