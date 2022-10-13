@@ -14,6 +14,18 @@ public static class SimpleConsoleAppHostBuilderExtensions
 {
   public static IHostBuilder UseSimpleConsoleApp(
     this IHostBuilder hostBuilder,
+    Type assemblyMarker)
+  {
+    var screenAssembly = assemblyMarker.Assembly;
+
+    return hostBuilder.UseSimpleConsoleApp(screenAssembly, options =>
+    {
+      options.SetStartScreen(assemblyMarker);
+    });
+  }
+
+  public static IHostBuilder UseSimpleConsoleApp(
+    this IHostBuilder hostBuilder,
     Type assemblyMarker,
     Action<SimpleConsoleAppOptions> options)
   {

@@ -17,7 +17,7 @@ public abstract class ScreenBase : ISimpleComponentAsync
     this.app = app;
   }
 
-  public ScreenTitle ScreenTitle { get; set; } = new (string.Empty);
+  public ScreenTitle ScreenTitle { get; set; } = new ("Simple Console");
 
   protected SimpleConsoleApp App => this.app;
 
@@ -45,6 +45,8 @@ public abstract class ScreenBase : ISimpleComponentAsync
     {
       await component.PrintAsync(token);
     }
+
+    SimpleMessage.AnyKeyToContinue();
   }
 
   public virtual async Task ExitAsync(CancellationToken token = default)
