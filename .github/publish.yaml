@@ -2,7 +2,7 @@ name: Build and Publish IGE.SimpleConsole to github
 
 on:
   push:
-    branche:
+    branch:
       main:
         tags: ["v*"]
         
