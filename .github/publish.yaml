@@ -1,0 +1,36 @@
+name: Build and Publish IGE.SimpleConsole to github
+
+on:
+  push:
+    branche:
+      main:
+        tags: ["v*"]
+        
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      packages: write
+      contents: read
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        
+      - name: Setup dotnet 10.0.x
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+          source-url: https://nuget.pkg.github.com/rblackmore/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          
+      - name: Build .NET Project
+        run: dotnet build IGE.SimpleConsole.sln --configuration Release
+       
+      - name: Package *.nupkg file
+        run: dotnet pack IGE.SimpleConsole.sln --configuration Release --no-build --no-restore --output .
+        
+      - name: Publish to GPR
+        run: dotnet nuget push ./*.nupkg --skip-duplicate
